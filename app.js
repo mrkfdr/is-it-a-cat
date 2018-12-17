@@ -5,9 +5,7 @@ const cameraView = document.querySelector("#camera--view"),
       cameraSensor = document.querySelector("#camera--sensor"),
       cameraTrigger = document.querySelector("#camera--trigger")
 
-
 function cameraStart() {
-console.log('camera start');
     navigator.mediaDevices
         .getUserMedia(constraints)
         .then(function(stream) {
