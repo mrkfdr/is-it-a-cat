@@ -1,0 +1,27 @@
+{
+  "name": "is-it-a-cat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrkfdr/is-it-a-cat.git"
+  },
+  "author": "marFdr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrkfdr/is-it-a-cat/issues"
+  },
+  "homepage": "https://github.com/mrkfdr/is-it-a-cat#readme",
+  "dependencies": {
+    "@google-cloud/storage": "^2.3.3",
+    "@google-cloud/vision": "^0.23.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "multer": "^1.4.1",
+    "pug": "^2.0.3"
+  }
+}
