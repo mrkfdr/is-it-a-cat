@@ -1,5 +1,5 @@
 
-//\/\ark 
+//\/\ark
 'use strict';
 const express = require('express');
 const utils = require('./modules/utils.js');
@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text());
 
 //express
-app.listen(port, () => console.log(` app listening on port ${port}!`))
+app.listen(port, () => console.log(`iscat running on port ${port}!`))
 //http node server
 // app.listen = function() {
 //   var server = http.createServer(function(req,res){
