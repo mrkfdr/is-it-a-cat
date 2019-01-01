@@ -4,7 +4,7 @@ const cameraView = document.querySelector("#camera--view"),
       cameraSensor = document.querySelector("#camera--sensor"),
       cameraTrigger = document.querySelector("#camera--trigger")
 const catM = new catModule();
-
+var track;
 function cameraStart() {
     navigator.mediaDevices
         .getUserMedia(constraints)
@@ -24,6 +24,7 @@ cameraTrigger.onclick = function() {
     imageTaken = cameraSensor.toDataURL("image/jpeg");
     cameraOutput.src = cameraSensor.toDataURL("image/jpeg");
     catM.returnResultPage(cameraOutput.src);
+    track.stop();
 };
 
 window.addEventListener("load", cameraStart, false);
