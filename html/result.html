@@ -1,13 +1,15 @@
 <div class="container">
-    <div class="text-white bg-dark">
+    <div class="text-white bg-dark p-1">
     <!-- <div class="page-header text-white bg-dark"> -->
-      <span id="isCat"></span>
+      <span id="isCat">... Prosessing image </span>
     </div>
 </div>
 <div class="container">
     <div class="row">
         <div class="col-8">
-            <div id = "tags"></div>
+            <div id = "tags">
+
+            </div>
         </div>
         <div class="col-3">
             <div id="result" class="">
@@ -16,34 +18,14 @@
         </div>
     </div>
 </div>
-
-<div id = "searchResults"class="container">
-    <!-- search results here -->
-<!-- AIzaSyAY7lMvEwDi2mhU2ZgB6V8K_aCvM7W_7Rg -->
-
-<script>
-  // var service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-  // var params = {
-  //   'query': 'jaffa',
-  //   'limit': 10,
-  //   'indent': true,
-  //   'key' : 'AIzaSyAY7lMvEwDi2mhU2ZgB6V8K_aCvM7W_7Rg',
-  // };
-  // $.getJSON(service_url + '?callback=?', params, function(response) {
-  //   $.each(response.itemListElement, function(i, element) {
-  //     $('<div>', {text:element['result']['name']}).appendTo(document.body);
-  //   });
-  // });
-</script>
+<div class="se-pre-con"></div>
+<div class="msgNotfound"></div>
 
 
-
-
-    <div class="se-pre-con"></div>
-</div>
+<div  class="container pre-scrollable mh-100" id = "searchResults"></div>
 
 <div class="container floatBottom">
     <form action="/camera" method="post">
-        <input type="submit" value='Take Picture' />
+        <button id="camera--trigger">Take a picture</button>
     </form>
 </div>

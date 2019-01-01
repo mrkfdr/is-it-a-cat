@@ -1,9 +1,10 @@
 
 //\/\ark
 'use strict';
+
 const express = require('express');
 const utils = require('./modules/utils.js');
-
+const request = require("request");
 const app = express();
 const port = 3000
 const fs = require('fs');
@@ -28,7 +29,10 @@ app.use(bodyParser.text());
 
 //express
 app.listen(process.env.PORT || 8080, () => console.log(`iscat running on port 8080`))
+//app.listen(port, () => console.log(` app listening on port ${port}!`))
+
 //http node server
+//
 // app.listen = function() {
 //   var server = http.createServer(function(req,res){
 //
@@ -48,8 +52,32 @@ app.post('/camera', function (req, res,next) {
         res.sendFile(path.join(__dirname,  '/html/camera.html'));
     }
 });
+    app.post('/kgsearch', function (req, res, next) {
 
-app.post('/identify',upload.array(), function (req, res, next) {
+    var keySearch = req.body;
+
+    console.log(keySearch);
+
+    var options = { method: 'GET',
+        url: 'https://kgsearch.googleapis.com/v1/entities:search',
+        qs: {
+            query: keySearch,
+            key:'AIzaSyAY7lMvEwDi2mhU2ZgB6V8K_aCvM7W_7Rg',
+            indent: 'True',
+            limit: '30'
+        }
+    };
+
+    request(options, function (error, response, body) {
+      if (error){
+          throw new Error(error)
+      };
+//add check empty return
+      res.send(JSON.parse(body))
+    });
+});
+
+app.post('/identify', function (req, res, next) {
     var bufferImage = utils.bufferImage(req.body);
     var arr = [];
     const labels = require('./modules/detect');
@@ -63,13 +91,14 @@ app.post('/identify',upload.array(), function (req, res, next) {
     lbArray.getLabelDescription(bufferImage)
             .then(function(resp){
                 resp.forEach(function(label){
-                     console.log(label.description);
+                    //console.log(label.description);
                      arr.push(label.description);
                 })
                 res.send(JSON.stringify(arr));
     })
+
 });
 
-app.post('/test', function (req, res,next) {
+app.get('/test', function (req, res,next) {
     res.sendFile(path.join(__dirname,  '/html/ts.html'));
 });

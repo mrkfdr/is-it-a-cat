@@ -2,6 +2,10 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src *;
+           img-src * 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' *;
+           style-src  'self' 'unsafe-inline' *">
+
         <title></title>
 
         <script src="init.js"></script>
@@ -11,49 +15,24 @@
         <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous"> -->
         <link rel="stylesheet" href="bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-        <script src="https://s.yimg.com/uv/dm/scripts/partnertest/syndicationtest.js"></script>
+        <!-- <script src="https://s.yimg.com/uv/dm/scripts/partnertest/syndicationtest.js"></script> -->
 
     </head>
     <body>
+        <div  class="container" id = "searchResults">
 
-        <style>#myDivAdUnit iframe{width:100%}</style>
-                      <div id="myDivAdUnit"></div>
-
-
-                      <style>#myDivAlgoUnit iframe{width:100%}</style>
-                                    <div id="myDivAlgoUnit"></div>
-
-
-
-
-                <script type='text/javascript'>
-                        window.ypaAds.insertMultiAd({
-                            ypaAdConfig   : 'aa0000001',
-                            ypaAdTypeTag  : 'test',
-                            ypaPubParams  : {
-                                query: "adidas shoes",
-                            },
-                            ypaAdSlotInfo : [
-                                {
-                                    ypaAdSlotId : 'adSlot',
-                                    ypaAdDivId  : 'myDivAdUnit',
-                                    ypaAdWidth  : '600',
-                                    ypaAdHeight : '494'
-                                },
-                                {
-                                    ypaAdSlotId : 'algoSlot',
-                                    ypaAdDivId  : 'myDivAlgoUnit',
-                                    ypaAdWidth  : '600',
-                                    ypaAdHeight : '494'
-                                }
-                            ]
-                        });
-                </script>
-
-
-                
-
-
-
-    </body>
+             <div class="row">
+                <div id="searchText" class="col-8">
+                    <div class="searchTitle">title</div>
+                    <div class="searchDescription">desc</div>
+                    <div class="searchUrl">url </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+image
+                    <img src="" alt="" class="img-fluid">
+                </div>
+            </div>
+        </div>    </body>
 </html>
