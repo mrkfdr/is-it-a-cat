@@ -5,6 +5,7 @@
 const express = require('express');
 const utils = require('./modules/utils.js');
 const request = require("request");
+var unirest = require('unirest');
 const app = express();
 const port = 3000
 const fs = require('fs');
@@ -23,9 +24,12 @@ app.use(express.static(path.join(__dirname, '/img')));
 app.use(express.static(path.join(__dirname, '/iscat')));
 app.use(express.static(path.join(__dirname, '/iscat/src')));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.text());
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.text({limit: '30mb', extended: true}));
+
+app.use(bodyParser.json({limit: '30mb', extended: true}))
+app.use(bodyParser.urlencoded({limit: '30mb', extended: true}))
 
 //express
 app.listen(process.env.PORT || 8080, () => console.log(`iscat running on port 8080`))
@@ -52,12 +56,22 @@ app.post('/camera', function (req, res,next) {
         res.sendFile(path.join(__dirname,  '/html/camera.html'));
     }
 });
-    app.post('/kgsearch', function (req, res, next) {
 
+
+app.post('/kgsearch', function (req, res, next) {
+    unirest.get("https://kgsearch.googleapis.com/v1/entities:search?query="+req.body+"&key=AIzaSyAY7lMvEwDi2mhU2ZgB6V8K_aCvM7W_7Rg&limit=15&indent=True")
+
+    .end(function (result) {
+    //    res.send(JSON.stringify(result.body.value))
+        res.send(result.body)
+    });
+
+});
+
+
+app.post('/kgsearcha', function (req, res, next) {
+console.log('keySearch');
     var keySearch = req.body;
-
-    console.log(keySearch);
-
     var options = { method: 'GET',
         url: 'https://kgsearch.googleapis.com/v1/entities:search',
         qs: {
@@ -67,12 +81,11 @@ app.post('/camera', function (req, res,next) {
             limit: '30'
         }
     };
-
     request(options, function (error, response, body) {
       if (error){
           throw new Error(error)
       };
-//add check empty return
+      //add check empty return
       res.send(JSON.parse(body))
     });
 });
@@ -82,23 +95,49 @@ app.post('/identify', function (req, res, next) {
     var arr = [];
     const labels = require('./modules/detect');
     const lbArray =  labels.LabelDetection;
+    const webArray = labels.WebDetection;
+
+    var image = req.body.replace("data:image/jpeg;base64,","")
+
+
+//return
+    webArray.getWebEnteties(bufferImage)
+        .then(function(resp){
+            resp.webEntities.forEach(function(webEntities){
+                //console.log(label.description);
+                 arr.push(webEntities.description);
+            })
+
+            console.log(resp);
+            res.send(JSON.stringify(arr));
+        })
+
 
     //    var arr = ["glasses","facial hair","vision care","eyewear","chin","electronic device","portrait","beard","sunglasses","fun"];
     //fs.writeFile('image.jpeg', bufferImage);
     //res.send(arr)
     //res.end();
 
-    lbArray.getLabelDescription(bufferImage)
-            .then(function(resp){
-                resp.forEach(function(label){
-                    //console.log(label.description);
-                     arr.push(label.description);
-                })
-                res.send(JSON.stringify(arr));
-    })
-
+// return
+//     lbArray.getLabelDescription(bufferImage)
+//             .then(function(resp){
+//                 resp.forEach(function(label){
+//                     //console.log(label.description);
+//                      arr.push(label.description);
+//                 })
+//                 res.send(JSON.stringify(arr));
+//     })
+//
 });
 
+app.post('/contsearch', function (req, res,next) {
+    unirest.get("https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/WebSearchAPI?q="+req.body+"&count=20&autocorrect=false")
+    .header("X-RapidAPI-Key", "621a7b63bfmsh498cf8bfb21cb4cp1537c6jsn81d3f66436ce")
+    .end(function (result) {
+        res.send(JSON.stringify(result.body.value))
+    });
+})
 app.get('/test', function (req, res,next) {
-    res.sendFile(path.join(__dirname,  '/html/ts.html'));
+
+    //res.sendFile(path.join(__dirname,  'ts.html'));
 });

@@ -28,15 +28,22 @@ var catModule = (function(){
                  console.log(this.responseText);
                }
            };
-       xhr.send(imageTaken);
+       xhr.onerror = function() {
+           console.log('err add how to deal with');
+               //reject(new TypeError(xhr.responseText || 'Network request failed'))
+        }
 
+        xhr.ontimeout = function() {
+            console.log('err add how to deal with');
+               //reject(new TypeError(xhr.responseText || 'Network request failed'))
+        }
        xhr.onreadystatechange = function() {
            if (xhr.readyState == XMLHttpRequest.DONE) {
                addTagsToPage(xhr.responseText);
-               $(".se-pre-con").fadeOut("slow");
-
            }
        }
+       xhr.send(imageTaken);
+
    };
 
    function addTagsToPage(tags) {
@@ -49,19 +56,58 @@ var catModule = (function(){
 
            $.each(data, function(i, item) {
                $('#tags').append(document.createTextNode(item + ' ,'));
+               shearchTag.setTagParams(item)
            });
            isCatOnImage(data);
-           //future use
-           shearchTag.setTagParams(data[0]);
-           shearchTag.setTagParams(data[1]);
-           shearchTag.setTagParams(data[3]);
 
-           var searchString =data[0];// + "+" + data[1];
-           kgsearch(searchString);
+           //var searchString =data[2] + " + " + data[3];
+           contsearch(data[0]);
+           kgsearch(data[0]);
+           //contsearch(shearchTag.getTagParams().slice(0,1));
 
            return
        });
   };
+
+  function contsearch(str){
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/contsearch", true);
+        xhr.responseType = '';
+        xhr.onload = function(e) {
+            if (this.status == 200) {
+                //  console.log(this.responseText);
+                }
+            };
+            // search term fix
+        xhr.send(str);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                prosessCWSearchResult (xhr.responseText);
+                $(".se-pre-con").fadeOut("slow");
+
+                return
+            }
+        }
+  };
+
+function prosessCWSearchResult(result){
+    var res = JSON.parse(result);
+
+    $.each(res, function(id, element) {
+        var outName = element.title ;
+        var outDetailDescription = element.hasOwnProperty('description') ? element.description : "";
+        var outUrl = element.hasOwnProperty('url') ? element.url: "";
+        var outImage =  element.image.hasOwnProperty('thumbnail') ? element.image.thumbnail : ""
+        var outDescription ='';
+        //outDetailDescription = outDetailDescription.substring(0, 300);
+        id = id + "CW"
+        createSearchResultRow(id,outName.substring(0,70),outDescription,outUrl,outImage,outDetailDescription.substring(0,300))
+      });
+}
+
+
+
   function kgsearch(str){
       var xhr = new XMLHttpRequest();
       xhr.open('POST', '/kgsearch', true);
@@ -75,11 +121,24 @@ var catModule = (function(){
       xhr.send(str);
       xhr.onreadystatechange = function() {
           if (xhr.readyState == XMLHttpRequest.DONE) {
-              addSearchToPage(xhr.responseText);
+              addKGSearchToPage(xhr.responseText);
           }
       }
   };
-  function addSearchToPage (res){
+
+  function createSearchResultRow(id,outName,outDescription,outUrl,outImage,outDetailDescription){
+
+      $("#searchResults").append('<div class="row border border-light rounded m-1 shadow" id ='+id+ '>')
+      $("#"+id)
+         .append(
+          $('<div class="pl-1 w-100 text-primary">' + outName + " " + outDescription +'</div>'),
+          $('<a class="pl-1 w-100 text-success small searchUrl border-bottom text-truncate" target="_blank" href = "'+outUrl+'">'+outUrl+' </a>') ,
+          $('<div class="col-9 small">'+ outDetailDescription +'... </div>'),
+          $('<img src="'+outImage+'" alt=""  class=" pt-1 col-3 h-50 rounded float-right ">')
+         )
+  };
+
+  function addKGSearchToPage (res){
       var res = JSON.parse(res);
       if (res.itemListElement.length === 0){
           $("#msgNotfound").text( ' ... no search found');
@@ -92,17 +151,11 @@ var catModule = (function(){
           var outUrl = element.result.detailedDescription.hasOwnProperty ('url') ? element.result.detailedDescription.url: "";
           var outImage =  element.result.hasOwnProperty('image') ? element.result.image.contentUrl : ""
           var outDetailDescription =  element.result.detailedDescription.hasOwnProperty('articleBody') ? element.result.detailedDescription.articleBody :"" ;
-          outDetailDescription = outDetailDescription.substring(0, 100);
+          outDetailDescription = outDetailDescription.substring(0, 300);
+          id =id + "KG";
+          createSearchResultRow(id,outName,outDescription,outUrl,outImage,outDetailDescription)
 
-          $("#searchResults").append('<div class="row border border-light rounded m-1 shadow" id ='+id+ '>')
-          $("#"+id)
-             .append(
-              $('<div class="col-8 text-primary">' + outName + " " + outDescription +'</div>'),
-              $('<a class="col-8 text-success small searchUrl border-bottom text-truncate" target="_blank" href = "'+outUrl+'">'+outUrl+' </a>') ,
-              $('<div class="col-8 small">'+ outDetailDescription +'... </div>'),
-              $('<img src="'+outImage+'" alt="" class="col-4 h-50 rounded float-right ">')
-             )
-       });
+        });
   };
 
   function isCatOnImage (data){

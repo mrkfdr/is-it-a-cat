@@ -4,6 +4,7 @@ const cameraView = document.querySelector("#camera--view"),
       cameraSensor = document.querySelector("#camera--sensor"),
       cameraTrigger = document.querySelector("#camera--trigger")
 const catM = new catModule();
+const catA = new catApi();
 var track;
 function cameraStart() {
     navigator.mediaDevices

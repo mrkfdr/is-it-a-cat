@@ -16,6 +16,6 @@ function getLabelDescription(img){
       })
       .catch(err => {
         console.error('ERROR:', err);
-    });
+      });
 };
 exports.getLabelDescription =  getLabelDescription
