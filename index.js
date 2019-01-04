@@ -131,12 +131,20 @@ app.post('/contsearch', function (req, res,next) {
         }
     };
     request(options, function (error, response, body) {
-      if (error){
-          throw new Error(error)
-      };
-      var bod  = JSON.parse(response.body).value
-      res.send(JSON.stringify(bod))
-    });
+        if (error){
+            res.send([]);
+            throw new Error(error);
+        };
+
+        try {
+          var bod  = JSON.parse(response.body).value;
+          res.send(JSON.stringify(bod));
+        }
+        catch(err) {
+          res.send([]);
+        }
+
+     });
 })
 app.get('/test', function (req, res,next) {
 

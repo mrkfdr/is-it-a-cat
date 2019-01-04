@@ -18,7 +18,7 @@ var catModule = (function(){
     })();
 
    function identifyImage(imageTaken){
-       var responseText = document.getElementById('tags');
+      // var responseText = document.getElementById('tags');
        catA.openXhr("POST","/identify",imageTaken).then(function(res){
            addTagsToPage(res);
        });
@@ -33,15 +33,24 @@ var catModule = (function(){
            }
 
            $.each(data, function(i, item) {
-               $('#tags').append(document.createTextNode(item + ' ,'));
+               //$('#tags').append(document.createTextNode(item + ' ,'));
+               $('#tags').append('<div class = "badge badge-pill badge-info" id = '+item+'>'+item+'</div>')
                shearchTag.setTagParams(item)
            });
-           isCatOnImage(data);
+           $('#tags').append('</br>').append(document.createTextNode('Click on tag to search term'));
 
-           //var searchString =data[2] + " + " + data[3];
-           contsearch(data[0]);
+           isCatOnImage(data);
+           contsearch(data[1]);
            kgsearch(data[0]);
            //contsearch(shearchTag.getTagParams().slice(0,1));
+
+           $('.badge-pill').click(function (){
+               var clickId =$(this).html();
+               kgsearch(clickId);
+               contsearch(clickId);
+               $('#searchResults').empty()
+               $(".se-pre-con").fadeIn("slow");
+            });
 
            return
        });
@@ -49,7 +58,9 @@ var catModule = (function(){
 
   function contsearch(str){
       catA.openXhr("POST","/contsearch",str).then(function(res){
-          prosessCWSearchResult (res);
+          if (res){
+              prosessCWSearchResult (res);
+          }
           $(".se-pre-con").fadeOut("slow");
       });
   };
@@ -88,8 +99,8 @@ function prosessCWSearchResult(result){
 
   function processKGSearchResults (res){
       var res = JSON.parse(res);
-      if (res.itemListElement.length === 0){
-          $("#msgNotfound").text( ' ... no search found');
+      if (!res.itemListElement.length){
+          //$(".msgNotfound").text( ' ... no search found');
           return
       }
       $.each(res.itemListElement, function(id, element) {
