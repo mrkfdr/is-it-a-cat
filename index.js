@@ -96,7 +96,7 @@ app.post('/identify', function (req, res, next) {
                  arr.push(webEntities.description);
             })
 
-            console.log(resp);
+            //console.log(resp);
             res.send(JSON.stringify(arr));
         })
 
