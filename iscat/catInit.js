@@ -104,9 +104,7 @@ function prosessCWSearchResult(result){
         id = id + "CW"
         createSearchResultRow(id,outName.substring(0,70),outDescription,outUrl,outImage,outDetailDescription.substring(0,300))
       });
-}
-
-
+  }
 
   function kgsearch(str){
       var xhr = new XMLHttpRequest();

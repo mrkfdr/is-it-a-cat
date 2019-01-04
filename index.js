@@ -5,7 +5,6 @@
 const express = require('express');
 const utils = require('./modules/utils.js');
 const request = require("request");
-var unirest = require('unirest');
 const app = express();
 const port = 3000
 const fs = require('fs');
@@ -57,36 +56,26 @@ app.post('/camera', function (req, res,next) {
     }
 });
 
-
 app.post('/kgsearch', function (req, res, next) {
-    unirest.get("https://kgsearch.googleapis.com/v1/entities:search?query="+req.body+"&key=AIzaSyAY7lMvEwDi2mhU2ZgB6V8K_aCvM7W_7Rg&limit=15&indent=True")
-
-    .end(function (result) {
-    //    res.send(JSON.stringify(result.body.value))
-        res.send(result.body)
-    });
-
-});
-
-
-app.post('/kgsearcha', function (req, res, next) {
 console.log('keySearch');
     var keySearch = req.body;
-    var options = { method: 'GET',
+    var options = {
+        method: 'GET',
         url: 'https://kgsearch.googleapis.com/v1/entities:search',
         qs: {
             query: keySearch,
             key:'AIzaSyAY7lMvEwDi2mhU2ZgB6V8K_aCvM7W_7Rg',
             indent: 'True',
             limit: '30'
-        }
+        },
     };
     request(options, function (error, response, body) {
       if (error){
           throw new Error(error)
       };
       //add check empty return
-      res.send(JSON.parse(body))
+      res.send(response.body)
+      //      res.send(JSON.parse(body))
     });
 });
 
@@ -98,7 +87,6 @@ app.post('/identify', function (req, res, next) {
     const webArray = labels.WebDetection;
 
     var image = req.body.replace("data:image/jpeg;base64,","")
-
 
 //return
     webArray.getWebEnteties(bufferImage)
@@ -131,10 +119,23 @@ app.post('/identify', function (req, res, next) {
 });
 
 app.post('/contsearch', function (req, res,next) {
-    unirest.get("https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/WebSearchAPI?q="+req.body+"&count=20&autocorrect=false")
-    .header("X-RapidAPI-Key", "621a7b63bfmsh498cf8bfb21cb4cp1537c6jsn81d3f66436ce")
-    .end(function (result) {
-        res.send(JSON.stringify(result.body.value))
+    var options = { method: 'GET',
+        url: 'https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/WebSearchAPI?',
+        qs: {
+            q: req.body,
+            count: 20,
+            autocorrect:false
+        },
+        headers: {
+            'X-RapidAPI-Key': '621a7b63bfmsh498cf8bfb21cb4cp1537c6jsn81d3f66436ce'
+        }
+    };
+    request(options, function (error, response, body) {
+      if (error){
+          throw new Error(error)
+      };
+      var bod  = JSON.parse(response.body).value
+      res.send(JSON.stringify(bod))
     });
 })
 app.get('/test', function (req, res,next) {
