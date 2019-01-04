@@ -4,8 +4,8 @@ const cameraView = document.querySelector("#camera--view"),
       cameraSensor = document.querySelector("#camera--sensor"),
       cameraTrigger = document.querySelector("#camera--trigger")
 const catM = new catModule();
-const catA = new catApi();
 var track;
+
 function cameraStart() {
     navigator.mediaDevices
         .getUserMedia(constraints)
@@ -24,7 +24,9 @@ cameraTrigger.onclick = function() {
     cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
     imageTaken = cameraSensor.toDataURL("image/jpeg");
     cameraOutput.src = cameraSensor.toDataURL("image/jpeg");
+
     catM.returnResultPage(cameraOutput.src);
+
     track.stop();
 };
 

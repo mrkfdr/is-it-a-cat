@@ -1,7 +1,7 @@
 //\/\ark
 
 var catModule = (function(){
-
+    const catA = new catApi();
     var shearchTag = (function(){
         var tagParams = [];
         function exec(val){
@@ -19,31 +19,9 @@ var catModule = (function(){
 
    function identifyImage(imageTaken){
        var responseText = document.getElementById('tags');
-       var xhr = new XMLHttpRequest();
-       xhr.open('POST', '/identify', true);
-       xhr.responseType = '';
-       //xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-       xhr.onload = function(e) {
-           if (this.status == 200) {
-                 console.log(this.responseText);
-               }
-           };
-       xhr.onerror = function() {
-           console.log('err add how to deal with');
-               //reject(new TypeError(xhr.responseText || 'Network request failed'))
-        }
-
-        xhr.ontimeout = function() {
-            console.log('err add how to deal with');
-               //reject(new TypeError(xhr.responseText || 'Network request failed'))
-        }
-       xhr.onreadystatechange = function() {
-           if (xhr.readyState == XMLHttpRequest.DONE) {
-               addTagsToPage(xhr.responseText);
-           }
-       }
-       xhr.send(imageTaken);
-
+       catA.openXhr("POST","/identify",imageTaken).then(function(res){
+           addTagsToPage(res);
+       });
    };
 
    function addTagsToPage(tags) {
@@ -70,25 +48,10 @@ var catModule = (function(){
   };
 
   function contsearch(str){
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/contsearch", true);
-        xhr.responseType = '';
-        xhr.onload = function(e) {
-            if (this.status == 200) {
-                //  console.log(this.responseText);
-                }
-            };
-            // search term fix
-        xhr.send(str);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == XMLHttpRequest.DONE) {
-                prosessCWSearchResult (xhr.responseText);
-                $(".se-pre-con").fadeOut("slow");
-
-                return
-            }
-        }
+      catA.openXhr("POST","/contsearch",str).then(function(res){
+          prosessCWSearchResult (res);
+          $(".se-pre-con").fadeOut("slow");
+      });
   };
 
 function prosessCWSearchResult(result){
@@ -100,28 +63,15 @@ function prosessCWSearchResult(result){
         var outUrl = element.hasOwnProperty('url') ? element.url: "";
         var outImage =  element.image.hasOwnProperty('thumbnail') ? element.image.thumbnail : ""
         var outDescription ='';
-        //outDetailDescription = outDetailDescription.substring(0, 300);
         id = id + "CW"
         createSearchResultRow(id,outName.substring(0,70),outDescription,outUrl,outImage,outDetailDescription.substring(0,300))
       });
   }
 
   function kgsearch(str){
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', '/kgsearch', true);
-      xhr.responseType = '';
-      xhr.onload = function(e) {
-          if (this.status == 200) {
-                console.log(this.responseText);
-              }
-          };
-          // search term fix
-      xhr.send(str);
-      xhr.onreadystatechange = function() {
-          if (xhr.readyState == XMLHttpRequest.DONE) {
-              addKGSearchToPage(xhr.responseText);
-          }
-      }
+      catA.openXhr("POST","/kgsearch",str).then(function(res){
+          processKGSearchResults(res);
+      });
   };
 
   function createSearchResultRow(id,outName,outDescription,outUrl,outImage,outDetailDescription){
@@ -136,7 +86,7 @@ function prosessCWSearchResult(result){
          )
   };
 
-  function addKGSearchToPage (res){
+  function processKGSearchResults (res){
       var res = JSON.parse(res);
       if (res.itemListElement.length === 0){
           $("#msgNotfound").text( ' ... no search found');
@@ -165,18 +115,13 @@ function prosessCWSearchResult(result){
   };
 return{
     returnResultPage:function(imageTaken){
-        var xhr = new XMLHttpRequest();
         data = {image: 'imageTaken'};
-            xhr.open('post', '/camera', true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == XMLHttpRequest.DONE) {
-                $("#mainView").replaceWith( xhr.responseText );
+        catA.openXhr("POST","/camera",JSON.stringify(data))
+            .then(function(res){
+                $("#mainView").replaceWith( res );
                 $("#imageOutput").attr("src",imageTaken);
                 identifyImage(imageTaken);
-            }
-        }
-        xhr.send(JSON.stringify(data));
+        });
         return
     }
 }
