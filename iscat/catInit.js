@@ -36,6 +36,21 @@ var catModule = (function(){
                //$('#tags').append(document.createTextNode(item + ' ,'));
                $('#tags').append('<div class = "badge badge-pill badge-info" id = '+item+'>'+item+'</div>')
                shearchTag.setTagParams(item)
+               if (item){
+                   //gtag('event', 'src', item);
+                 //  ga('send', 'event', 'engagement', 'search',item,item);
+
+                   gtag('event', "search", {
+                     'event_category': 'engagement',
+                     'event_label': item,
+                     'value': item
+                   });
+
+                   //gtag('event', 'engagement', item);
+                   //gtag('config', 'UA-8433432-15');
+//ga('send', 'event', [eventCategory], [eventAction], [eventLabel], [eventValue], [fieldsObject]);
+               }
+
            });
            $('#tags').append('</br>').append(document.createTextNode('Click on tag to search term'));
 
@@ -87,19 +102,32 @@ function prosessCWSearchResult(result){
 
   function createSearchResultRow(id,outName,outDescription,outUrl,outImage,outDetailDescription){
 
+      if (!outImage){
+          var fitBoxIfNoImg =  '<div class="col-12 small">'+ outDetailDescription +'... </div>'
+      }else{
+          var fitBoxIfNoImg =  '<div class="col-9 small">'+ outDetailDescription +'... </div>'
+      }
+
       $("#searchResults").append('<div class="row border border-light rounded m-1 shadow" id ='+id+ '>')
       $("#"+id)
          .append(
           $('<div class="pl-1 w-100 text-primary">' + outName + " " + outDescription +'</div>'),
           $('<a class="pl-1 w-100 text-success small searchUrl border-bottom text-truncate" target="_blank" href = "'+outUrl+'">'+outUrl+' </a>') ,
-          $('<div class="col-9 small">'+ outDetailDescription +'... </div>'),
+          $(fitBoxIfNoImg),
+          //$('<div class="col-9 small">'+ outDetailDescription +'... </div>'),
           $('<img src="'+outImage+'" alt=""  class=" pt-1 col-3 h-50 rounded float-right ">')
+
+
+
+//          $('<div class="col-9 small">'+ outDetailDescription +'... </div>'),
+//          $('<img src="'+outImage+'" alt=""  class=" pt-1 col-3 h-50 rounded float-right ">')
          )
   };
 
   function processKGSearchResults (res){
       var res = JSON.parse(res);
-      if (!res.itemListElement.length){
+
+      if (!res.itemListElement || res.error){
           //$(".msgNotfound").text( ' ... no search found');
           return
       }

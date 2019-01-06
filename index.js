@@ -57,7 +57,7 @@ app.post('/camera', function (req, res,next) {
 });
 
 app.post('/kgsearch', function (req, res, next) {
-console.log('keySearch');
+//console.log('keySearch');
     var keySearch = req.body;
     var options = {
         method: 'GET',
@@ -75,7 +75,6 @@ console.log('keySearch');
       };
       //add check empty return
       res.send(response.body)
-      //      res.send(JSON.parse(body))
     });
 });
 
@@ -85,6 +84,7 @@ app.post('/identify', function (req, res, next) {
     const labels = require('./modules/detect');
     const lbArray =  labels.LabelDetection;
     const webArray = labels.WebDetection;
+    const logoArray = labels.LogoDetection;
 
     var image = req.body.replace("data:image/jpeg;base64,","")
 
@@ -92,12 +92,16 @@ app.post('/identify', function (req, res, next) {
     webArray.getWebEnteties(bufferImage)
         .then(function(resp){
             resp.webEntities.forEach(function(webEntities){
-                //console.log(label.description);
                  arr.push(webEntities.description);
             })
-
-            //console.log(resp);
-            res.send(JSON.stringify(arr));
+            logoArray.getLogoEnteties(bufferImage)
+                .then(function(response){
+                    response.forEach(function(logoEntries){
+                        arr.unshift(logoEntries.description)
+                    //    console.log('logo; '+ logoEntries.description);
+                    })
+                    res.send(JSON.stringify(arr));
+                })
         })
 
 
@@ -143,7 +147,6 @@ app.post('/contsearch', function (req, res,next) {
         catch(err) {
           res.send([]);
         }
-
      });
 })
 app.get('/test', function (req, res,next) {

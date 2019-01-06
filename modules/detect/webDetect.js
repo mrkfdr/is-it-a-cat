@@ -5,12 +5,11 @@ const client = new vision.ImageAnnotatorClient();
 
 function getWebEnteties(img){
     let image = {content: img };
-
-     return client
-      .webDetection( {image} )
+    return client
+      .webDetection( {image})
       .then(results => {
         const webDetection = results[0].webDetection;
-        logResults(webDetection);
+        //logResults(webDetection);
         return webDetection;
       })
       .catch(err => {

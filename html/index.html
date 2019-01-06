@@ -21,7 +21,7 @@
                     <h3> experimental project by Mark Feder </h3>
                     </br></br></br>
                     <form action="/camera" method="post">
-                        <input class='btn btn-dark btn-lg float-right' type="submit"  value='Take Picture' />
+                        <input id = 'takeCat' class='btn btn-dark btn-lg float-right' type="submit"  value='Take Picture' />
                     </br>
                     </form>
                     </br></br>
@@ -33,9 +33,12 @@
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-
           gtag('config', 'UA-8433432-15');
+//          window.onload = function(){
+//              document.getElementById('takeCat').onclick = function(){document.documentElement.requestFullscreen(); };
+//          }
         </script>
+
 
     </body>
     <script src="jquery-3.3.1.min.js"></script>
