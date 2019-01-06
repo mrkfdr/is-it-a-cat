@@ -29,7 +29,7 @@ cameraTrigger.onclick = function() {
     cameraOutput.src = cameraSensor.toDataURL("image/jpeg");
     catM.returnResultPage(cameraOutput.src);
     track.stop();
-    document.documentElement.requestFullscreen();
+    //document.documentElement.requestFullscreen();
 };
 
 window.addEventListener("load", cameraStart, false);
