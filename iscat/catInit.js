@@ -31,6 +31,7 @@ var catModule = (function(){
                $('#isCatmsg').text('Can not prosess image please try again')
                $('#isCatmsg').removeClass('alert-warning').addClass('alert-danger')
                $('#spinner').remove();
+
                return
            }
 
@@ -54,7 +55,7 @@ var catModule = (function(){
                        $('#resultsoutput').append('<div id = "textTags" class="wrp2">')
                        itemfound.textfound.forEach(function (item, index) {
                           if (index > 0) {
-                                $('#textTags').append('<div class = "badge " id = tx'+index+'> Full Text: '+item+' </div></br>')
+                              $('#textTags').append('<div class = "badge " id = tx'+index+'>'+item+', </div>')
                           }
                        });
                        $('.wrp2' ).wrapAll( "<div class='container border border-primary rounded pb-1 m-1'></div></p>" )
@@ -68,12 +69,13 @@ var catModule = (function(){
                         $('.wrp3' ).wrapAll( "<div class='container border border-primary rounded pb-1 m-1'></div></p>" )
                     break
 
-                    default:
+                   default:
                }
            })
             $('#isCatmsg').text('Image analysis results')
             $('#isCatmsg').removeClass('alert-warning').addClass('alert-success')
             $('#spinner').remove();
+
 
            return
        });
