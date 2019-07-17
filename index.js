@@ -4,10 +4,16 @@
 
 const express = require('express');
 const utils = require('./modules/utils.js');
+const classifyGoogle = require('./modules/classify.js');
+
 const request = require("request");
 const app = express();
 const port = 3000
 const fs = require('fs');
+//const CognitiveServicesCredentials = require('ms-rest-azure').CognitiveServicesCredentials;
+//const WebSearchAPIClient = require('azure-cognitiveservices-websearch');
+const https = require('https')
+const detectApi = require('./modules/detect');
 
 var router = express.Router();
 var bodyParser = require('body-parser');
@@ -30,21 +36,9 @@ app.use(bodyParser.text({limit: '30mb', extended: true}));
 app.use(bodyParser.json({limit: '30mb', extended: true}))
 app.use(bodyParser.urlencoded({limit: '30mb', extended: true}))
 
-//express
 app.listen(process.env.PORT || 8080, () => console.log(`iscat running on port 8080`))
-//app.listen(port, () => console.log(` app listening on port ${port}!`))
 
-//http node server
-//
-// app.listen = function() {
-//   var server = http.createServer(function(req,res){
-//
-//   });
-//   console.log("Server on port ${port}");
-//   return server.listen.apply(server, arguments);
-// };
-//
- app.get('/', function (req, res) {
+app.get('/', function (req, res) {
      res.sendFile(path.join(__dirname,  'index.html'));
  });
 
@@ -56,100 +50,15 @@ app.post('/camera', function (req, res,next) {
     }
 });
 
-app.post('/kgsearch', function (req, res, next) {
-//console.log('keySearch');
-    var keySearch = req.body;
-    var options = {
-        method: 'GET',
-        url: 'https://kgsearch.googleapis.com/v1/entities:search',
-        qs: {
-            query: keySearch,
-            key:'AIzaSyAY7lMvEwDi2mhU2ZgB6V8K_aCvM7W_7Rg',
-            indent: 'True',
-            limit: '30'
-        },
-    };
-    request(options, function (error, response, body) {
-      if (error){
-          throw new Error(error)
-      };
-      //add check empty return
-      res.send(response.body)
-    });
-});
-
-app.post('/identify', function (req, res, next) {
+app.post('/identifyimage', function (req, res, next) {
     var bufferImage = utils.bufferImage(req.body);
     var arr = [];
-    const labels = require('./modules/detect');
-    const lbArray =  labels.LabelDetection;
-    const webArray = labels.WebDetection;
-    const logoArray = labels.LogoDetection;
-
-    var image = req.body.replace("data:image/jpeg;base64,","")
-
-//return
-    webArray.getWebEnteties(bufferImage)
-        .then(function(resp){
-            resp.webEntities.forEach(function(webEntities){
-                 arr.push(webEntities.description);
+    const lbArray =  detectApi.ImageAnnotation;
+    //var image = req.body.replace("data:image/jpeg;base64,","")
+    lbArray.getImageAnnotation(bufferImage)
+            .then(function(resp){
+                var jsonData = classifyGoogle.recieveddata(resp)
+                res.send(JSON.stringify(jsonData))
+                res.end()
             })
-            logoArray.getLogoEnteties(bufferImage)
-                .then(function(response){
-                    response.forEach(function(logoEntries){
-                        arr.unshift(logoEntries.description)
-                    //    console.log('logo; '+ logoEntries.description);
-                    })
-                    res.send(JSON.stringify(arr));
-                })
-        })
-
-
-    //    var arr = ["glasses","facial hair","vision care","eyewear","chin","electronic device","portrait","beard","sunglasses","fun"];
-    //fs.writeFile('image.jpeg', bufferImage);
-    //res.send(arr)
-    //res.end();
-
-// return
-//     lbArray.getLabelDescription(bufferImage)
-//             .then(function(resp){
-//                 resp.forEach(function(label){
-//                     //console.log(label.description);
-//                      arr.push(label.description);
-//                 })
-//                 res.send(JSON.stringify(arr));
-//     })
-//
-});
-
-app.post('/contsearch', function (req, res,next) {
-    var options = { method: 'GET',
-        url: 'https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/WebSearchAPI?',
-        qs: {
-            q: req.body,
-            count: 20,
-            autocorrect:false
-        },
-        headers: {
-            'X-RapidAPI-Key': '621a7b63bfmsh498cf8bfb21cb4cp1537c6jsn81d3f66436ce'
-        }
-    };
-    request(options, function (error, response, body) {
-        if (error){
-            res.send([]);
-            throw new Error(error);
-        };
-
-        try {
-          var bod  = JSON.parse(response.body).value;
-          res.send(JSON.stringify(bod));
-        }
-        catch(err) {
-          res.send([]);
-        }
-     });
-})
-app.get('/test', function (req, res,next) {
-
-    //res.sendFile(path.join(__dirname,  'ts.html'));
 });

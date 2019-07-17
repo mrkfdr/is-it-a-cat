@@ -56,3 +56,12 @@ html, body{
 	z-index: 9999;
 	background: url(cat.gif) center no-repeat #fff;
 }
+
+#camera-rectangle{
+    position: absolute;
+    top: 14%;
+    left: 2%;
+    width: 96vw;
+    height: 66vh;
+    z-index: 1000;
+}

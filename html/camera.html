@@ -15,18 +15,22 @@
     <script src="catapicalls.js"></script>
     <script src="jquery-3.3.1.min.js"></script>
     <script src="bootstrap.min.js"></script>
-    <link rel="stylesheet" href="bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link href="bootstrap.min.css" rel="stylesheet">
+<!--
+    <link rel="stylesheet" href="bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous"> -->
 
     <title>Is it a Cat</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body style="background-color:#ffffff" >
     <main id="camera">
     <div id="mainView">
+        <div id="camera-rectangle" class = "border border-warning rounded"> </div>
         <video id="camera--view" autoplay playsinline></video>
         <canvas id="camera--sensor"></canvas>
         <img src="//:0" alt="" id="camera--output">
         <button id="camera--trigger">Take a picture</button>
+
     </div>
     </main>
     <script src="camApp.js"></script>

@@ -12,6 +12,7 @@ function getLabelDescription(img){
       .labelDetection( request )
       .then(results => {
         const labels = results[0].labelAnnotations;
+        console.log(results)
         return labels;
       })
       .catch(err => {

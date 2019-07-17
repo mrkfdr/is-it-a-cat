@@ -9,6 +9,7 @@ function getWebEnteties(img){
       .webDetection( {image})
       .then(results => {
         const webDetection = results[0].webDetection;
+        //console.log(results)
         //logResults(webDetection);
         return webDetection;
       })

@@ -18,140 +18,69 @@ var catModule = (function(){
     })();
 
    function identifyImage(imageTaken){
-      // var responseText = document.getElementById('tags');
-       catA.openXhr("POST","/identify",imageTaken).then(function(res){
+       catA.openXhr("POST","/identifyimage",imageTaken)
+        .then(function(res){
            addTagsToPage(res);
-       });
+        });
    };
 
    function addTagsToPage(tags) {
        $( document ).ready(function() {
            data = $.parseJSON(tags);
            if (data.length === 0){
-               $('.msgNotfound').append('<p>...  can not prosess image </p><p>...  please try taking a clear pictire of the subject</p> ')
+               $('#isCatmsg').text('Can not prosess image please try again')
+               $('#isCatmsg').removeClass('alert-warning').addClass('alert-danger')
                return
            }
 
-           $.each(data, function(i, item) {
-               //$('#tags').append(document.createTextNode(item + ' ,'));
-               $('#tags').append('<div class = "badge badge-pill badge-info" id = '+item+'>'+item+'</div>')
-               shearchTag.setTagParams(item)
-               if (item){
-                   //gtag('event', 'src', item);
-                 //  ga('send', 'event', 'engagement', 'search',item,item);
+           data.data.forEach(function (itemfound, index) {
+               switch(Object.keys(itemfound)[0]) {
+                   case 'bestguess':
+                       $('#topicresultsoutput').append('<div id = "label" class="wrp font-weight-bold text-info">Image Description</div>')
+                       $('#topicresultsoutput').append('<div id = "tag" class="wrp badge">'+itemfound.bestguess+'</div>')
+                       $('.wrp' ).wrapAll( "<div class='container border border-primary rounded pb-1 m-1'></div></p>" );
+                   break
+                   case 'labels':
+                       $('#resultsoutput').append('<div id = "label" class="wrp1 font-weight-bold text-info">Tags</div>')
+                       $('#resultsoutput').append('<div id = "labelTags" class="wrp1">')
+                       itemfound.labels.forEach(function (item, index) {
+                          $('#labelTags').append('<div class = "badge" id = lb'+index+'>#'+item+' </div>')
+                       });
+                       $('.wrp1' ).wrapAll( "<div class='container border border-primary rounded pb-1 m-1'></div></p>" )
+                   break
+                   case 'textfound':
+                       $('#resultsoutput').append('<div id = "label" class="wrp2 font-weight-bold text-info">Text</div>')
+                       $('#resultsoutput').append('<div id = "textTags" class="wrp2">')
+                       itemfound.textfound.forEach(function (item, index) {
+                          if (index === 0) {
+                                $('#textTags').append('<div class = "badge " id = tx'+index+'> Full Text: '+item+' </div></br>')
+                          }else{
+                              $('#textTags').append('<div class = "badge " id = tx'+index+'>'+item+', </div>')
+                          }
+                       });
+                       $('.wrp2' ).wrapAll( "<div class='container border border-primary rounded pb-1 m-1'></div></p>" )
+                    break
+                    case 'logofound':
+                        $('#resultsoutput').append('<div id = "label" class="wrp3 font-weight-bold text-info">Brands & Logo</div>')
+                        $('#resultsoutput').append('<div id = "logoTags" class="wrp3">')
+                        itemfound.logofound.forEach(function (item, index) {
+                           $('#logoTags').append('<div class = "badge " id = lo'+index+'>'+item+', </div>')
+                        });
+                        $('.wrp3' ).wrapAll( "<div class='container border border-primary rounded pb-1 m-1'></div></p>" )
+                    break
 
-                   gtag('event', "search", {
-                     'event_category': 'engagement',
-                     'event_label': item,
-                     'value': item
-                   });
-
-                   //gtag('event', 'engagement', item);
-                   //gtag('config', 'UA-8433432-15');
-//ga('send', 'event', [eventCategory], [eventAction], [eventLabel], [eventValue], [fieldsObject]);
+                   default:
                }
+           })
+            $('#isCatmsg').text('Image analysis results')
+            $('#isCatmsg').removeClass('alert-warning').addClass('alert-success')
+            $('#spinner').remove();
 
-           });
-           $('#tags').append('</br>').append(document.createTextNode('Click on tag to search term'));
-
-           isCatOnImage(data);
-           contsearch(data[1]);
-           kgsearch(data[0]);
-           //contsearch(shearchTag.getTagParams().slice(0,1));
-
-           $('.badge-pill').click(function (){
-               var clickId =$(this).html();
-               kgsearch(clickId);
-               contsearch(clickId);
-               $('#searchResults').empty()
-               $(".se-pre-con").fadeIn("slow");
-            });
 
            return
        });
   };
 
-  function contsearch(str){
-      catA.openXhr("POST","/contsearch",str).then(function(res){
-          if (res){
-              prosessCWSearchResult (res);
-          }
-          $(".se-pre-con").fadeOut("slow");
-      });
-  };
-
-function prosessCWSearchResult(result){
-    var res = JSON.parse(result);
-
-    $.each(res, function(id, element) {
-        var outName = element.title ;
-        var outDetailDescription = element.hasOwnProperty('description') ? element.description : "";
-        var outUrl = element.hasOwnProperty('url') ? element.url: "";
-        var outImage =  element.image.hasOwnProperty('thumbnail') ? element.image.thumbnail : ""
-        var outDescription ='';
-        id = id + "CW"
-        createSearchResultRow(id,outName.substring(0,70),outDescription,outUrl,outImage,outDetailDescription.substring(0,300))
-      });
-  }
-
-  function kgsearch(str){
-      catA.openXhr("POST","/kgsearch",str).then(function(res){
-          processKGSearchResults(res);
-      });
-  };
-
-  function createSearchResultRow(id,outName,outDescription,outUrl,outImage,outDetailDescription){
-
-      if (!outImage){
-          var fitBoxIfNoImg =  '<div class="col-12 small">'+ outDetailDescription +'... </div>'
-      }else{
-          var fitBoxIfNoImg =  '<div class="col-9 small">'+ outDetailDescription +'... </div>'
-      }
-
-      $("#searchResults").append('<div class="row border border-light rounded m-1 shadow" id ='+id+ '>')
-      $("#"+id)
-         .append(
-          $('<div class="pl-1 w-100 text-primary">' + outName + " " + outDescription +'</div>'),
-          $('<a class="pl-1 w-100 text-success small searchUrl border-bottom text-truncate" target="_blank" href = "'+outUrl+'">'+outUrl+' </a>') ,
-          $(fitBoxIfNoImg),
-          //$('<div class="col-9 small">'+ outDetailDescription +'... </div>'),
-          $('<img src="'+outImage+'" alt=""  class=" pt-1 col-3 h-50 rounded float-right ">')
-
-
-
-//          $('<div class="col-9 small">'+ outDetailDescription +'... </div>'),
-//          $('<img src="'+outImage+'" alt=""  class=" pt-1 col-3 h-50 rounded float-right ">')
-         )
-  };
-
-  function processKGSearchResults (res){
-      var res = JSON.parse(res);
-
-      if (!res.itemListElement || res.error){
-          //$(".msgNotfound").text( ' ... no search found');
-          return
-      }
-      $.each(res.itemListElement, function(id, element) {
-        if (!element.result.detailedDescription) return
-          var outName = element.result.name ;
-          var outDescription = element.result.hasOwnProperty('description') ? element.result.description : "";
-          var outUrl = element.result.detailedDescription.hasOwnProperty ('url') ? element.result.detailedDescription.url: "";
-          var outImage =  element.result.hasOwnProperty('image') ? element.result.image.contentUrl : ""
-          var outDetailDescription =  element.result.detailedDescription.hasOwnProperty('articleBody') ? element.result.detailedDescription.articleBody :"" ;
-          outDetailDescription = outDetailDescription.substring(0, 300);
-          id =id + "KG";
-          createSearchResultRow(id,outName,outDescription,outUrl,outImage,outDetailDescription)
-
-        });
-  };
-
-  function isCatOnImage (data){
-      if (data.includes('cat')){
-          $('#isCat').text('  yeahhh  you have a cat');
-      }else{
-          $('#isCat').text('  hmm.. No cats here,  but we found :');
-      }
-  };
 return{
     returnResultPage:function(imageTaken){
         data = {image: 'imageTaken'};

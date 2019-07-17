@@ -1,25 +1,46 @@
-<div class="container">
-    <div class="badge badge-dark p-1">
-    <!-- <div class="page-header text-white bg-dark"> -->
-      <span id="isCat">... Prosessing image </span>
-    </div>
-</div>
-<div class="container mh-100">
-    <div class="row">
-        <div class="col-8 pr-0 small ">
-            <div id = "tags">
 
-            </div>
+<div class="container" style="background-color:#FD763f">
+  <nav class="navbar navbar-expand-lg navbar-light" >
+    <a class="text-white navbar-brand p-0" href="#">PicData</a>
+    <a class="text-white nav-item p-0" href="#">Contact</a>
+    <a class="text-white nav-item p-0" href="#">Login</a>
+  </nav>
+</div>
+<div class="container pt-1">
+    <div class="row">
+        <div class="col-9 mt-2" >
+          <span id="isCatmsg" class ="alert alert-warning p-1 mt-1 m-1 w-50 h-50" role="alert"> PicData is prosessing image </span>
+          <div class=" mt-3" id="topicresultsoutput"> </div>
+
         </div>
+
         <div class="col-3">
             <div id="result" class="">
                 <image id="imageOutput"class="taken" src=''>
             </div>
         </div>
+
+    </div>
+    <!-- <div class="badge badge-dark p-1 pb-2"> -->
+    <!-- <div class="page-header text-white bg-dark"> -->
+      <!-- <span id="isCat">PicData is prosessing image </span> -->
+    <!-- </div> -->
+    <!-- </p> -->
+</div>
+
+<div class="container mh-100">
+    <div class="row">
+        <div class="col-12 pr-0 small" id="resultsoutput"></div>
     </div>
 </div>
-<div class="se-pre-con"></div>
+
 <div class="msgNotfound"></div>
+
+<div id='spinner' class="d-flex justify-content-center">
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
 
 
 <div  class="container pre-scrollable mh-100" id = "searchResults"></div>
