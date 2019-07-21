@@ -64,10 +64,25 @@ var catModule = (function(){
                         $('#resultsoutput').append('<div id = "label" class="wrp3 font-weight-bold text-info">Brands & Logo</div>')
                         $('#resultsoutput').append('<div id = "logoTags" class="wrp3">')
                         itemfound.logofound.forEach(function (item, index) {
-                           $('#logoTags').append('<div class = "badge " id = lo'+index+'>'+item+', </div>')
+                           $('#logoTags').append('<div class = "badge " id = lo'+index+'>'+item+' </div>')
                         });
                         $('.wrp3' ).wrapAll( "<div class='container border border-primary rounded pb-1 m-1'></div></p>" )
                     break
+                    case 'safesearch':
+                        $('#resultsoutput').append('<div id = "label" class="wrp4 font-weight-bold text-info">Safe Content</div>')
+                        $('#resultsoutput').append('<div id = "safeTags" class="wrp4">')
+                        itemfound.safesearch.forEach(function (item, index) {                           
+                           if ( item.match("UNLIKELY")) {
+                               $('#safeTags').append('<div class = "badge badge-success " id = lo'+index+'>'+item+' </div>')                          
+                           }else if (item.match("POSSIBLE")) {
+                               $('#safeTags').append('<div class = "badge badge-warning " id = lo'+index+'>'+item+' </div>')
+                           }else{
+                               $('#safeTags').append('<div class = "badge badge-danger " id = lo'+index+'>'+item+' </div>')
+                           }                             
+                        })
+                        $('.wrp4' ).wrapAll( "<div class='container border border-primary rounded pb-1 m-1'></div></p>" )
+
+                    
 
                    default:
                }

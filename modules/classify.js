@@ -34,22 +34,13 @@ exports.recieveddata = function (data) {
     }else{
         var logoAnnotations = ["No logo found"]
         obj.data.push ({'logofound': logoAnnotations})
-        
-        
-    //    obj.data.push ({'logofound': "No logos or brands found on image"})
     }
 
-    // if (data[0].safeSearchAnnotation.length > 0) {
-    //     var safeAnnotations = []
-    //
-    //     data[0].safeAnnotations.forEach(function (item, index) {
-    //       safeAnnotations.push(item.description)
-    //     });
-    //
-    //     obj.data.push ({'logofound': safeAnnotations})
-    // }
-    //
-    //     data[0].safeSearchAnnotation.adult
+    var safeAnnotation = []
+        Object.entries(data[0].safeSearchAnnotation).forEach(function(item, index){
+            safeAnnotation.push(item[0] +":"+item[1])
+        })
+        obj.data.push ({'safesearch': safeAnnotation})
 
     return obj
 };
