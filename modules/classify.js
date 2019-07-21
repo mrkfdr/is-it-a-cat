@@ -20,6 +20,9 @@ exports.recieveddata = function (data) {
           textAnnotations.push(item.description)
         });
         obj.data.push ({'textfound': textAnnotations})
+    }else{
+        var textAnnotations = [" "]
+        obj.data.push ({'textfound': textAnnotations})
     }
 
     if (data[0].logoAnnotations.length > 0) {
@@ -29,6 +32,10 @@ exports.recieveddata = function (data) {
         });
         obj.data.push ({'logofound': logoAnnotations})
     }else{
+        var logoAnnotations = ["No logo found"]
+        obj.data.push ({'logofound': logoAnnotations})
+        
+        
     //    obj.data.push ({'logofound': "No logos or brands found on image"})
     }
 
