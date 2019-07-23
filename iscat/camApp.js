@@ -34,9 +34,6 @@ cameraTrigger.onclick = function() {
         'app_name': 'PicDataDemo',
         'screen_name' : 'Camera'
       });
-
-
-    //document.documentElement.requestFullscreen();
 };
 
 window.addEventListener("load", cameraStart, false);
