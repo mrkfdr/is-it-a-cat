@@ -26,7 +26,16 @@ cameraTrigger.onclick = function() {
     cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
     cameraOutput.src = cameraSensor.toDataURL("image/jpeg");
     catM.returnResultPage(cameraOutput.src);
-    track.stop();
+    track.stop
+    gtag('event', 'take_picture', {
+        'event_category':'Camera Usage',
+        'event_label':'picture taken',
+        'app_action': 'picture teken',
+        'app_name': 'PicDataDemo',
+        'screen_name' : 'Camera'
+      });
+
+
     //document.documentElement.requestFullscreen();
 };
 

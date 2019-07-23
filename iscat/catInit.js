@@ -41,6 +41,14 @@ var catModule = (function(){
                        $('#topicresultsoutput').append('<div id = "label" class="wrp font-weight-bold text-info">Image Description</div>')
                        $('#topicresultsoutput').append('<div id = "tag" class="wrp badge">'+itemfound.bestguess+'</div>')
                        $('.wrp' ).wrapAll( "<div class='container border border-primary rounded pb-1 m-1'></div></p>" );
+                           gtag('event', 'result', {
+                               'event_category':'Camera Usage',
+                               'event_label':itemfound.bestguess,
+                               'app_action': 'identify',
+                               'app_name': 'PicDataDemo',
+                               'screen_name' : 'Result'
+                             });
+
                    break
                    case 'labels':
                        $('#resultsoutput').append('<div id = "label" class="wrp1 font-weight-bold text-info">Generated Tags</div>')
@@ -71,18 +79,16 @@ var catModule = (function(){
                     case 'safesearch':
                         $('#resultsoutput').append('<div id = "label" class="wrp4 font-weight-bold text-info">Safe Content</div>')
                         $('#resultsoutput').append('<div id = "safeTags" class="wrp4">')
-                        itemfound.safesearch.forEach(function (item, index) {                           
+                        itemfound.safesearch.forEach(function (item, index) {
                            if ( item.match("UNLIKELY")) {
-                               $('#safeTags').append('<div class = "badge badge-success " id = lo'+index+'>'+item+' </div>')                          
+                               $('#safeTags').append('<div class = "badge badge-success " id = lo'+index+'>'+item+' </div>')
                            }else if (item.match("POSSIBLE")) {
                                $('#safeTags').append('<div class = "badge badge-warning " id = lo'+index+'>'+item+' </div>')
                            }else{
                                $('#safeTags').append('<div class = "badge badge-danger " id = lo'+index+'>'+item+' </div>')
-                           }                             
+                           }
                         })
                         $('.wrp4' ).wrapAll( "<div class='container border border-primary rounded pb-1 m-1'></div></p>" )
-
-                    
 
                    default:
                }
@@ -90,9 +96,7 @@ var catModule = (function(){
             $('#isCatmsg').text('Image analysis results')
             $('#isCatmsg').removeClass('alert-warning').addClass('alert-success')
             $('#spinner').remove();
-
-
-           return
+       return
        });
   };
 

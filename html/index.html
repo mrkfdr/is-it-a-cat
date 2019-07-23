@@ -41,9 +41,18 @@
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'UA-8433432-15');
-//          window.onload = function(){
-//              document.getElementById('takeCat').onclick = function(){document.documentElement.requestFullscreen(); };
-//          }
+
+         window.onload = function(){
+             document.getElementById('takeCat').onclick = function(){
+                 gtag('event', 'take_picture', {
+                     'event_category':'Camera Usage',
+                     'event_label':'Open Camera',
+                     'app_action': 'open camera',
+                     'app_name': 'PicDataDemo',
+                     'screen_name' : 'index'
+                   });
+                  };
+         }
         </script>
 
 
