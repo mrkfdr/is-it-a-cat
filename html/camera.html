@@ -22,8 +22,17 @@
 </head>
 <body style="background-color:#ffffff" >
     <main id="camera">
+        
+     
+     <!-- add  s h a r e icon-->
+     
+
+
+
+<!-- https://developers.google.com/web/updates/2016/09/navigator-share      -->
     <div id="mainView">
         <div id="camera-rectangle" class = "border border-warning rounded"> </div>
+        <img src="share-icon.png" alt="share" id="sharePD" style="position:absolute; z-index: 1000; width: 2em; height:2em; right:2%; top:1%">
         <video id="camera--view" autoplay playsinline></video>
         <canvas id="camera--sensor"></canvas>
         <img src="//:0" alt="" id="camera--output">
@@ -39,6 +48,16 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'UA-8433432-15');
+    
+      var shareButton = document.getElementById("sharePD");
+      shareButton.addEventListener("click", async () => {
+          try {
+              await navigator.share({ title: "PicDataAI image recognition", url: "https://cat-service-dot-gonow-140204.appspot.com/" });
+          }
+          catch (err) {
+                  console.error("Share failed:", err.message);
+          }
+      });
     </script>
 </body>
 </html>
